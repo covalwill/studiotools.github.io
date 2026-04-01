@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCQ Studio — Tool Fleet · Sans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --cream:    #F5F0E8;
+  --warm:     #EDE5D4;
+  --rust:     #C94B2A;
+  --rust-dk:  #9E3219;
+  --gold:     #D4A017;
+  --teal:     #2A6B6E;
+  --teal-lt:  #3D8B8F;
+  --charcoal: #1E1E1E;
+  --ink:      #2C2416;
+  --sand:     #B8A98A;
+  --sage:     #5A7A5C;
+  --sky:      #4A7FA5;
+
+  --bg:         var(--cream);
+  --bg2:        var(--warm);
+  --surface:    #FFFFFF;
+  --surface2:   #F0EBE0;
+  --text:       var(--ink);
+  --text-muted: #7A6E5A;
+  --text-dim:   #A89E88;
+  --border:     rgba(44,36,22,0.12);
+  --border-h:   rgba(44,36,22,0.25);
+
+  --accent:     var(--rust);
+  --accent2:    var(--teal);
+  --accent3:    var(--gold);
+
+  --fdm:   var(--sky);
+  --resin: #7B5EA7;
+  --cnc:   var(--rust);
+  --laser: #C44E3A;
+  --wood:  var(--sage);
+  --post:  var(--teal);
+  --shop:  #8A7560;
+  --mat:   #C4607A;
+}
+
+[data-theme="dark"] {
+  --bg:         #1A1610;
+  --bg2:        #221D14;
+  --surface:    #2A2318;
+  --surface2:   #312A1E;
+  --text:       #F0E8D8;
+  --text-muted: #A89878;
+  --text-dim:   #6A5E48;
+  --border:     rgba(240,232,216,0.1);
+  --border-h:   rgba(240,232,216,0.22);
+  --accent:     #E05E3A;
+  --accent2:    #4CA8AC;
+  --accent3:    #E0B030;
+  --fdm:        #6AABCC;
+  --resin:      #A882D4;
+  --cnc:        #E05E3A;
+  --laser:      #E06A55;
+  --wood:       #7AAA7C;
+  --post:       #4CA8AC;
+  --shop:       #B0A080;
+  --mat:        #E07890;
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: background 0.3s, color 0.3s;
+  /* subtle grain texture */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header {
+  background: var(--accent);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.header-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.header-title {
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-title h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #FFF8EE;
+}
+
+.header-title .variant-label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,248,238,0.55);
+  border-left: 1px solid rgba(255,248,238,0.3);
+  padding-left: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.theme-btn {
+  background: rgba(0,0,0,0.18);
+  border: none;
+  color: #FFF8EE;
+  padding: 0 1.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-left: 1px solid rgba(255,248,238,0.2);
+}
+.theme-btn:hover { background: rgba(0,0,0,0.3); }
+
+/* ── NAV ────────────────────────────────────────────────── */
+nav {
+  background: var(--bg2);
+  border-bottom: 2px solid var(--accent);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display: none; }
+
+.nav-inner {
+  display: flex;
+  gap: 0;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+nav a {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.7rem 1.1rem;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── DECORATIVE DIVIDER SHAPES ──────────────────────────── */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.section-head .shape {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.section-head h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.section-head .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+}
+
+.section { margin-bottom: 3.5rem; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
+  gap: 16px;
+}
+
+/* ── CARD ───────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--card-accent, var(--rust));
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 6px 0 var(--border);
+}
+
+.card-body { padding: 1.1rem 1.2rem 1.2rem; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: var(--card-accent, var(--rust));
+  color: #FFF8EE;
+  margin-bottom: 9px;
+}
+
+.card-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.card-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-top: 3px;
+  margin-bottom: 12px;
+}
+
+.spec-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  gap: 0 1rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3.5px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+.row:last-child { border-bottom: none; }
+.rl {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.rv {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: right;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0;
+}
+
+.mat-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 8px 0 5px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface2);
+}
+.tag-g { background: rgba(90,122,92,0.1);  color: var(--sage);  border-color: rgba(90,122,92,0.25); }
+.tag-y { background: rgba(212,160,23,0.1); color: var(--gold);  border-color: rgba(212,160,23,0.25); }
+.tag-r { background: rgba(201,75,42,0.1);  color: var(--rust);  border-color: rgba(201,75,42,0.25); }
+.tag-p { background: rgba(123,94,167,0.1); color: #7B5EA7;      border-color: rgba(123,94,167,0.25); }
+
+[data-theme="dark"] .tag-g { color: #7AAA7C;  background: rgba(122,170,124,0.1); border-color: rgba(122,170,124,0.25); }
+[data-theme="dark"] .tag-y { color: #E0B030;  background: rgba(224,176,48,0.1);  border-color: rgba(224,176,48,0.25); }
+[data-theme="dark"] .tag-r { color: #E05E3A;  background: rgba(224,94,58,0.1);   border-color: rgba(224,94,58,0.25); }
+[data-theme="dark"] .tag-p { color: #A882D4;  background: rgba(168,130,212,0.1); border-color: rgba(168,130,212,0.25); }
+
+.note {
+  font-size: 0.68rem;
+  font-style: italic;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ── SECTION SHAPE COLORS ───────────────────────────────── */
+.shape-circle { background: var(--rust); border-radius: 50%; }
+.shape-half   { background: var(--teal); border-radius: 0 50% 50% 0; }
+.shape-tri    { width:0!important; height:0!important;
+  border-left: 14px solid transparent; border-right: 14px solid transparent;
+  border-bottom: 28px solid var(--gold); background:none!important; }
+.shape-sq     { background: var(--sage); }
+.shape-diam   { background: var(--sky); transform: rotate(45deg); border-radius: 2px; }
+.shape-ring   { border: 4px solid var(--mat); border-radius: 50%; background: none; }
+.shape-sq2    { background: var(--shop); border-radius: 50% 0; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+* { min-width: 0; }
+body { overflow-x: hidden; }
+
+@media (max-width: 900px) {
+  .spec-cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .header-title h1 { font-size: 0.85rem; }
+  .header-title .variant-label { display: none; }
+  main { padding: 1.5rem 1rem 4rem; }
+  .nav-inner { padding: 0 0.75rem; }
+  .rv { font-size: 0.72rem; word-break: break-word; }
+}
+@media (max-width: 400px) {
+  .row { flex-direction: column; gap: 1px; }
+  .rv { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-title">
+      <h1>WCQ Studio</h1>
+      <span class="variant-label">Variant A &mdash; Sans-serif</span>
+    </div>
+    <div class="header-actions">
+      <button class="theme-btn" onclick="toggleTheme()">Toggle Mode</button>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#fdm">FDM</a>
+    <a href="#resin">Resin</a>
+    <a href="#cnc">CNC</a>
+    <a href="#laser">Laser</a>
+    <a href="#wood">Woodworking</a>
+    <a href="#shop">Shop Tools</a>
+    <a href="#materials">Materials</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- FDM -->
+<section class="section" id="fdm">
+  <div class="section-head">
+    <div class="shape shape-circle"></div>
+    <h2>FDM Printers</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--fdm)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--fdm)">FDM</span>
+        <div class="card-name">Bambu H2S</div>
+        <div class="card-sub">+ AMS 2 Pro Combo</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Build vol.</span><span class="rv">340×320×340 mm</span></div>
+            <div class="row"><span class="rl">Max speed</span><span class="rv">1000 mm/s</span></div>
+            <div class="row"><span class="rl">Accel.</span><span class="rv">20,000 mm/s²</span></div>
+            <div class="row"><span class="rl">Nozzle</span><span class="rv">350 °C</span></div>
+            <div class="row"><span class="rl">Bed</span><span class="rv">120 °C</span></div>
+            <div class="row"><span class="rl">Chamber</span><span class="rv">65 °C active</span></div>
+            <div class="row"><span class="rl">Motion</span><span class="rv">CoreXY, PMSM</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Extruder</span><span class="rv">Direct, closed-loop</span></div>
+            <div class="row"><span class="rl">AMS colors</span><span class="rv">Up to 24</span></div>
+            <div class="row"><span class="rl">Laser opt.</span><span class="rv">10W, 455nm</span></div>
+            <div class="row"><span class="rl">Noise</span><span class="rv">&lt;50 dB</span></div>
+            <div class="row"><span class="rl">Filter</span><span class="rv">HEPA + carbon</span></div>
+            <div class="row"><span class="rl">Footprint</span><span class="rv">800×1020×1050</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags">
+          <span class="tag tag-g">PLA</span><span class="tag tag-g">PETG</span><span class="tag tag-g">ABS</span><span class="tag tag-g">ASA</span><span class="tag tag-g">TPU</span><span class="tag tag-g">PVA</span><span class="tag tag-g">BVOH</span><span class="tag tag-g">PET</span><span class="tag tag-g">HIPS</span><span class="tag tag-g">PP</span>
+          <span class="tag tag-y">PC</span><span class="tag tag-y">PA/Nylon</span><span class="tag tag-y">PPS</span><span class="tag tag-y">PLA-CF/GF</span><span class="tag tag-y">PETG-CF/GF</span><span class="tag tag-y">PA-CF/GF</span>
+        </div>
+        <p class="note">Amber = engineering/abrasive — hardened nozzle required</p>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--fdm)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--fdm)">FDM</span>
+        <div class="card-name">Bambu X1 Carbon</div>
+        <div class="card-sub">+ AMS 1 Combo</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Build vol.</span><span class="rv">256×256×256 mm</span></div>
+            <div class="row"><span class="rl">Max speed</span><span class="rv">500 mm/s</span></div>
+            <div class="row"><span class="rl">Accel.</span><span class="rv">20,000 mm/s²</span></div>
+            <div class="row"><span class="rl">Nozzle</span><span class="rv">300 °C</span></div>
+            <div class="row"><span class="rl">Bed</span><span class="rv">120 °C</span></div>
+            <div class="row"><span class="rl">Chamber</span><span class="rv">Passive enclosed</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Motion</span><span class="rv">CoreXY</span></div>
+            <div class="row"><span class="rl">Extruder</span><span class="rv">Direct, hardened</span></div>
+            <div class="row"><span class="rl">Lidar</span><span class="rv">Yes, 7 μm Z</span></div>
+            <div class="row"><span class="rl">AMS colors</span><span class="rv">Up to 16</span></div>
+            <div class="row"><span class="rl">Filter</span><span class="rv">HEPA + carbon</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags">
+          <span class="tag tag-g">PLA</span><span class="tag tag-g">PETG</span><span class="tag tag-g">ABS</span><span class="tag tag-g">ASA</span><span class="tag tag-g">TPU</span><span class="tag tag-g">PVA</span><span class="tag tag-g">HIPS</span>
+          <span class="tag tag-y">PC</span><span class="tag tag-y">PA/Nylon</span><span class="tag tag-y">PLA-CF/GF</span><span class="tag tag-y">PETG-CF/GF</span><span class="tag tag-y">PA-CF/GF</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--fdm)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--fdm)">FDM</span>
+        <div class="card-name">Bambu A1 Mini</div>
+        <div class="card-sub">No AMS — open-frame</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Build vol.</span><span class="rv">180×180×180 mm</span></div>
+            <div class="row"><span class="rl">Max speed</span><span class="rv">500 mm/s</span></div>
+            <div class="row"><span class="rl">Accel.</span><span class="rv">10,000 mm/s²</span></div>
+            <div class="row"><span class="rl">Nozzle</span><span class="rv">300 °C</span></div>
+            <div class="row"><span class="rl">Bed</span><span class="rv">80 °C</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Chamber</span><span class="rv">None (open)</span></div>
+            <div class="row"><span class="rl">Motion</span><span class="rv">Bed slinger</span></div>
+            <div class="row"><span class="rl">Extruder</span><span class="rv">Direct drive</span></div>
+            <div class="row"><span class="rl">Multi-color</span><span class="rv">AMS Lite (max 4)</span></div>
+            <div class="row"><span class="rl">Noise</span><span class="rv">&lt;49 dB</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Recommended</div>
+        <div class="tags"><span class="tag tag-g">PLA</span><span class="tag tag-g">PETG</span><span class="tag tag-g">TPU</span><span class="tag tag-g">PVA</span><span class="tag tag-g">HIPS</span></div>
+        <div class="mat-label" style="margin-top:8px">Not recommended</div>
+        <div class="tags"><span class="tag tag-r">ABS</span><span class="tag tag-r">ASA</span><span class="tag tag-r">PC</span><span class="tag tag-r">PA</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESIN -->
+<section class="section" id="resin">
+  <div class="section-head">
+    <div class="shape shape-half"></div>
+    <h2>Resin Printing</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--resin)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--resin)">Resin — MSLA</span>
+        <div class="card-name">ELEGOO Saturn 4 Ultra 12K</div>
+        <div class="card-sub">405nm / tilt-release</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Build vol.</span><span class="rv">219×123×220 mm</span></div>
+            <div class="row"><span class="rl">LCD</span><span class="rv">10" mono, 11520×5120</span></div>
+            <div class="row"><span class="rl">XY res.</span><span class="rv">19×24 μm</span></div>
+            <div class="row"><span class="rl">Layer ht.</span><span class="rv">0.01–0.2 mm</span></div>
+            <div class="row"><span class="rl">Speed</span><span class="rv">150 mm/h</span></div>
+            <div class="row"><span class="rl">Release</span><span class="rv">Tilt (PFA film)</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Light</span><span class="rv">405nm COB + Fresnel</span></div>
+            <div class="row"><span class="rl">Uniformity</span><span class="rv">92%</span></div>
+            <div class="row"><span class="rl">Camera</span><span class="rv">AI + timelapse</span></div>
+            <div class="row"><span class="rl">Auto-level</span><span class="rv">Yes</span></div>
+            <div class="row"><span class="rl">Storage</span><span class="rv">8 GB internal</span></div>
+            <div class="row"><span class="rl">Slicer</span><span class="rv">Chitubox / Lychee</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Compatible resins (any 405nm)</div>
+        <div class="tags">
+          <span class="tag tag-g">Standard</span><span class="tag tag-g">ABS-like</span><span class="tag tag-g">Water-washable</span><span class="tag tag-g">Plant-based</span><span class="tag tag-g">Tough</span><span class="tag tag-g">Flexible</span>
+          <span class="tag tag-y">Engineering</span><span class="tag tag-y">Castable</span><span class="tag tag-y">Dental</span>
+        </div>
+        <p class="note">Not brand-locked — any 405nm resin works</p>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--post)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--post)">Post-process</span>
+        <div class="card-name">Anycubic Wash & Cure Plus</div>
+        <div class="card-sub">Resin post-processing station</div>
+        <div class="row"><span class="rl">Wash method</span><span class="rv">IPA agitation</span></div>
+        <div class="row"><span class="rl">Cure light</span><span class="rv">405nm UV LEDs</span></div>
+        <div class="row"><span class="rl">Rotation</span><span class="rv">Turntable for even cure</span></div>
+        <div class="row"><span class="rl">Compatible</span><span class="rv">LCD / DLP / SLA</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--post)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--post)">Filament Dryer</span>
+        <div class="card-name">SUNLU FilaDryer S4</div>
+        <div class="card-sub">4-spool simultaneous drying</div>
+        <div class="row"><span class="rl">Capacity</span><span class="rv">4 × 1kg spools</span></div>
+        <div class="row"><span class="rl">Heater</span><span class="rv">350W PTC</span></div>
+        <div class="row"><span class="rl">Max temp</span><span class="rv">70 °C</span></div>
+        <div class="row"><span class="rl">Temp range</span><span class="rv">35–70 °C</span></div>
+        <div class="row"><span class="rl">Fans</span><span class="rv">3× circulation</span></div>
+        <div class="row"><span class="rl">Humidity</span><span class="rv">Auto ≥50% RH</span></div>
+        <div class="row"><span class="rl">Timer</span><span class="rv">0–99 hours</span></div>
+        <div class="row"><span class="rl">PTFE outlets</span><span class="rv">8 (print from dryer)</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CNC -->
+<section class="section" id="cnc">
+  <div class="section-head">
+    <div class="shape shape-sq"></div>
+    <h2>CNC</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--cnc)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--cnc)">CNC Router</span>
+        <div class="card-name">Shapeoko Pro XXL</div>
+        <div class="card-sub">Carbide 3D — 3-axis</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Cutting area</span><span class="rv">838×838×102 mm</span></div>
+            <div class="row"><span class="rl">Footprint</span><span class="rv">1270×1067×483 mm</span></div>
+            <div class="row"><span class="rl">Rails</span><span class="rv">15mm linear, all axes</span></div>
+            <div class="row"><span class="rl">Motors</span><span class="rv">NEMA 23 stepper</span></div>
+            <div class="row"><span class="rl">Accuracy</span><span class="rv">~0.005" (0.127mm)</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Table</span><span class="rv">Hybrid T-slot</span></div>
+            <div class="row"><span class="rl">Homing</span><span class="rv">Inductive sensors</span></div>
+            <div class="row"><span class="rl">Tool length</span><span class="rv">BitSetter</span></div>
+            <div class="row"><span class="rl">Dust boot</span><span class="rv">Sweepy 65mm V2</span></div>
+            <div class="row"><span class="rl">Software</span><span class="rv">Carbide Create + Motion</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags">
+          <span class="tag tag-g">Softwood / hardwood</span><span class="tag tag-g">MDF / plywood</span><span class="tag tag-g">Acrylic</span><span class="tag tag-g">HDPE / Delrin</span><span class="tag tag-g">Aluminum</span><span class="tag tag-g">Carbon fiber</span><span class="tag tag-g">FR4 / PCB</span><span class="tag tag-g">Wax / foam</span>
+          <span class="tag tag-y">Brass</span><span class="tag tag-y">Copper</span>
+          <span class="tag tag-r">Steel (not recommended)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--cnc)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--cnc)">VFD Spindle</span>
+        <div class="card-name">Carbide 3D 65mm VFD</div>
+        <div class="card-sub">110V · ER-16 · Air-cooled · v2</div>
+        <div class="row"><span class="rl">Power</span><span class="rv">~1.5 kW (12A @ 110V)</span></div>
+        <div class="row"><span class="rl">RPM range</span><span class="rv">~6,000–24,000 RPM</span></div>
+        <div class="row"><span class="rl">Collet system</span><span class="rv">ER-16</span></div>
+        <div class="row"><span class="rl">Included collets</span><span class="rv">1/8", 1/4", 3/8"</span></div>
+        <div class="row"><span class="rl">Max shank</span><span class="rv">3/8" (9.5mm)</span></div>
+        <div class="row"><span class="rl">RPM control</span><span class="rv">G-code / Carbide Motion</span></div>
+        <div class="row"><span class="rl">Manual override</span><span class="rv">VFD front panel</span></div>
+        <div class="row"><span class="rl">Cooling</span><span class="rv">Air-cooled (no chiller)</span></div>
+        <div class="row"><span class="rl">BitRunner</span><span class="rv">Not needed — built-in</span></div>
+        <div class="row"><span class="rl">Outlet req.</span><span class="rv">Non-GFCI, 20A circuit</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--cnc)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--cnc)">Air Assist</span>
+        <div class="card-name">RATTMMOTOR AP30A</div>
+        <div class="card-sub">Paired with Shapeoko Pro XXL</div>
+        <div class="row"><span class="rl">Airflow</span><span class="rv">30 L/min</span></div>
+        <div class="row"><span class="rl">Power</span><span class="rv">16W</span></div>
+        <div class="row"><span class="rl">Voltage</span><span class="rv">110V</span></div>
+        <div class="row"><span class="rl">Max pressure</span><span class="rv">0.03 MPa (~4.3 PSI)</span></div>
+        <div class="row"><span class="rl">Noise</span><span class="rv">40 dB</span></div>
+        <div class="row"><span class="rl">Flow control</span><span class="rv">Adjustable knob</span></div>
+        <div class="row"><span class="rl">Diverter</span><span class="rv">12-hole</span></div>
+        <div class="row"><span class="rl">Duty cycle</span><span class="rv">Continuous 24/7</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--cnc)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--cnc)">Desktop CNC Mill</span>
+        <div class="card-name">Carbide 3D Nomad 3</div>
+        <div class="card-sub">Fully enclosed · Built in California</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Cutting area</span><span class="rv">203×203×76 mm</span></div>
+            <div class="row"><span class="rl">Footprint</span><span class="rv">445×483×432 mm</span></div>
+            <div class="row"><span class="rl">Spindle</span><span class="rv">130W brushless</span></div>
+            <div class="row"><span class="rl">RPM range</span><span class="rv">9,000–24,000</span></div>
+            <div class="row"><span class="rl">Bearings</span><span class="rv">Angular contact</span></div>
+            <div class="row"><span class="rl">Collet</span><span class="rv">ER-11 (7mm max)</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Z-axis rails</span><span class="rv">HG-15 linear</span></div>
+            <div class="row"><span class="rl">X/Y motion</span><span class="rv">Lead screws, anti-backlash</span></div>
+            <div class="row"><span class="rl">Homing</span><span class="rv">Inductive switches</span></div>
+            <div class="row"><span class="rl">Work probe</span><span class="rv">BitZero V2</span></div>
+            <div class="row"><span class="rl">Enclosure</span><span class="rv">Full (HDPE/bamboo)</span></div>
+            <div class="row"><span class="rl">Door safety</span><span class="rv">Inductive interlock</span></div>
+            <div class="row"><span class="rl">Power</span><span class="rv">130W, 110V or 220V</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Software included</div>
+        <div class="tags"><span class="tag">MeshCAM V8</span><span class="tag">Carbide Create</span><span class="tag">Carbide Motion</span><span class="tag">Alibre Workshop</span><span class="tag tag-p">Carbide Copper (PCB)</span></div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags">
+          <span class="tag tag-g">Aluminum (6061, MIC6)</span><span class="tag tag-g">Brass</span><span class="tag tag-g">Copper</span><span class="tag tag-g">Wax</span><span class="tag tag-g">Hardwood</span><span class="tag tag-g">Acrylic</span><span class="tag tag-g">Delrin / POM</span><span class="tag tag-g">Carbon fiber</span>
+          <span class="tag tag-p">PCB / FR4</span><span class="tag tag-y">Mild steel (light cuts)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--cnc)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--cnc)">Handheld CNC</span>
+        <div class="card-name">Shaper Origin Gen 2</div>
+        <div class="card-sub">Full ecosystem</div>
+        <div class="row"><span class="rl">Type</span><span class="rv">Portable handheld CNC router</span></div>
+        <div class="row"><span class="rl">Design</span><span class="rv">App-based, real-time camera indexing</span></div>
+        <div class="row"><span class="rl">Software</span><span class="rv">Studio Perpetual License</span></div>
+        <div class="divider"></div>
+        <div class="mat-label">Ecosystem accessories</div>
+        <div class="tags"><span class="tag">Workstation</span><span class="tag">Plate</span><span class="tag">Shaper Tape (2" + std)</span><span class="tag">Trace</span><span class="tag">Woven Dust Hose</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LASER -->
+<section class="section" id="laser">
+  <div class="section-head">
+    <div class="shape shape-tri"></div>
+    <h2>Laser</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--laser)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--laser)">Fiber + Diode</span>
+        <div class="card-name">xTool F1 Ultra</div>
+        <div class="card-sub">Dual 20W fiber + 20W diode</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Bed size</span><span class="rv">220×220 mm</span></div>
+            <div class="row"><span class="rl">Expandable</span><span class="rv">220×500mm + conveyor</span></div>
+            <div class="row"><span class="rl">Fiber</span><span class="rv">20W — metals</span></div>
+            <div class="row"><span class="rl">Diode</span><span class="rv">20W — organics</span></div>
+            <div class="row"><span class="rl">Engrave spd.</span><span class="rv">10,000 mm/s</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Safety</span><span class="rv">Class I (enclosed)</span></div>
+            <div class="row"><span class="rl">Autofocus</span><span class="rv">Yes</span></div>
+            <div class="row"><span class="rl">Controller</span><span class="rv">Touchscreen + XCS</span></div>
+            <div class="row"><span class="rl">Rotary</span><span class="rv">RA2 Pro</span></div>
+            <div class="row"><span class="rl">Air filter</span><span class="rv">SafetyPro AP2</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags"><span class="tag tag-g">Stainless steel</span><span class="tag tag-g">Brass</span><span class="tag tag-g">Aluminum</span><span class="tag tag-g">Gold / silver</span><span class="tag tag-g">Anodized metals</span><span class="tag tag-g">Wood</span><span class="tag tag-g">Leather</span><span class="tag tag-g">Acrylic</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--laser)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--laser)">CO2 Laser</span>
+        <div class="card-name">OMTech Polar 350</div>
+        <div class="card-sub">50W CO2 tube</div>
+        <div class="spec-cols">
+          <div>
+            <div class="row"><span class="rl">Cutting area</span><span class="rv">510×300 mm</span></div>
+            <div class="row"><span class="rl">Rotary area</span><span class="rv">220×220 mm</span></div>
+            <div class="row"><span class="rl">Tube power</span><span class="rv">50W CO2</span></div>
+            <div class="row"><span class="rl">Camera</span><span class="rv">5MP</span></div>
+            <div class="row"><span class="rl">Air assist</span><span class="rv">Built-in</span></div>
+          </div>
+          <div>
+            <div class="row"><span class="rl">Water chiller</span><span class="rv">Built-in</span></div>
+            <div class="row"><span class="rl">Exhaust</span><span class="rv">353 CFM external</span></div>
+            <div class="row"><span class="rl">Safety</span><span class="rv">Class 4</span></div>
+            <div class="row"><span class="rl">Rotary units</span><span class="rv">2 included</span></div>
+            <div class="row"><span class="rl">Software</span><span class="rv">LightBurn / RDWorks</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="mat-label">Materials</div>
+        <div class="tags"><span class="tag tag-g">Wood</span><span class="tag tag-g">MDF / plywood</span><span class="tag tag-g">Acrylic</span><span class="tag tag-g">Leather</span><span class="tag tag-g">Glass</span><span class="tag tag-g">Fabric</span><span class="tag tag-g">Rubber</span><span class="tag tag-r">Bare metal (needs CerMark)</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WOODWORKING -->
+<section class="section" id="wood">
+  <div class="section-head">
+    <div class="shape shape-sq"></div>
+    <h2>Woodworking</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--wood)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--wood)">Track Saw</span>
+        <div class="card-name">Festool TS 55 FEQ F-Plus</div>
+        <div class="card-sub">+ Rail system</div>
+        <div class="row"><span class="rl">Type</span><span class="rv">Plunge track saw</span></div>
+        <div class="row"><span class="rl">Use</span><span class="rv">Precision crosscutting + ripping</span></div>
+        <div class="row"><span class="rl">Rail system</span><span class="rv">Included</span></div>
+        <div class="row"><span class="rl">Portability</span><span class="rv">Portable — moves between setups</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--wood)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--wood)">Miter Saw</span>
+        <div class="card-name">DeWalt DWS779</div>
+        <div class="card-sub">12" double-bevel sliding compound</div>
+        <div class="row"><span class="rl">Motor</span><span class="rv">15A</span></div>
+        <div class="row"><span class="rl">Blade</span><span class="rv">12"</span></div>
+        <div class="row"><span class="rl">Type</span><span class="rv">Double-bevel sliding compound</span></div>
+        <div class="row"><span class="rl">Use</span><span class="rv">Precision crosscuts + angled cuts</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--post)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--post)">Dust Extraction</span>
+        <div class="card-name">Festool CT 26 E-I HEPA</div>
+        <div class="card-sub">Workshop-class extractor</div>
+        <div class="row"><span class="rl">Tank</span><span class="rv">25L</span></div>
+        <div class="row"><span class="rl">Motor</span><span class="rv">350W</span></div>
+        <div class="row"><span class="rl">Noise</span><span class="rv">60 dB</span></div>
+        <div class="row"><span class="rl">Filter</span><span class="rv">HEPA</span></div>
+        <div class="row"><span class="rl">Features</span><span class="rv">Cordless-ready, wall-mount</span></div>
+        <div class="row"><span class="rl">Used with</span><span class="rv">Shapeoko, Nomad 3, others</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SHOP TOOLS -->
+<section class="section" id="shop">
+  <div class="section-head">
+    <div class="shape shape-sq2"></div>
+    <h2>Shop Tools</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--shop)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--shop)">Airbrush Kit</span>
+        <div class="card-name">VIVOHOME Airbrush Kit</div>
+        <div class="card-sub">Complete compressor + gun</div>
+        <div class="row"><span class="rl">Compressor</span><span class="rv">1/5 HP oil-free, 3L tank</span></div>
+        <div class="row"><span class="rl">Airflow</span><span class="rv">23–25 L/min, 0.8 CFM</span></div>
+        <div class="row"><span class="rl">Airbrush</span><span class="rv">0.3mm dual-action gravity-feed</span></div>
+        <div class="row"><span class="rl">Fluid tips</span><span class="rv">3 sizes included</span></div>
+        <div class="row"><span class="rl">Fans</span><span class="rv">Dual cooling</span></div>
+        <div class="row"><span class="rl">Noise</span><span class="rv">47 dB</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--shop)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--shop)">Ultrasonic Cleaner</span>
+        <div class="card-name">VEVOR 6L Ultrasonic Cleaner</div>
+        <div class="card-sub">Parts, jewelry, tools, PCBs</div>
+        <div class="row"><span class="rl">Tank</span><span class="rv">6L, 304 stainless steel</span></div>
+        <div class="row"><span class="rl">Ultrasonic</span><span class="rv">180W</span></div>
+        <div class="row"><span class="rl">Heater</span><span class="rv">200–500W</span></div>
+        <div class="row"><span class="rl">Frequency</span><span class="rv">40 kHz</span></div>
+        <div class="row"><span class="rl">Temp range</span><span class="rv">0–80 °C</span></div>
+        <div class="row"><span class="rl">Timer</span><span class="rv">0–30 min</span></div>
+        <div class="row"><span class="rl">Transducers</span><span class="rv">3</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--shop)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--shop)">Vacuum Chamber</span>
+        <div class="card-name">BACOENG 5-Gallon</div>
+        <div class="card-sub">Degassing + wood stabilizing</div>
+        <div class="row"><span class="rl">Tank</span><span class="rv">5 gal, tempered glass lid</span></div>
+        <div class="row"><span class="rl">Pump</span><span class="rv">4.5 CFM, 1-stage</span></div>
+        <div class="row"><span class="rl">Hose</span><span class="rv">5ft (4/1 SAE)</span></div>
+        <div class="row"><span class="rl">Use</span><span class="rv">Epoxy / silicone / urethane degassing, wood stabilizing</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--shop)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--shop)">Measurement</span>
+        <div class="card-name">Clockwise Tools DIGR-0105</div>
+        <div class="card-sub">Digital dial indicator</div>
+        <div class="row"><span class="rl">Range</span><span class="rv">0–1" / 25.4mm</span></div>
+        <div class="row"><span class="rl">Units</span><span class="rv">Inch / metric toggle</span></div>
+        <div class="row"><span class="rl">Readout</span><span class="rv">Electronic display</span></div>
+        <div class="row"><span class="rl">Data port</span><span class="rv">RS232</span></div>
+        <div class="row"><span class="rl">Auto-off</span><span class="rv">Yes</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--shop)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--shop)">Scale</span>
+        <div class="card-name">OXO Good Grips Food Scale</div>
+        <div class="card-sub">Epoxy / resin measuring</div>
+        <div class="row"><span class="rl">Capacity</span><span class="rv">11 lb</span></div>
+        <div class="row"><span class="rl">Increments</span><span class="rv">1/8 oz / 1 gram</span></div>
+        <div class="row"><span class="rl">Display</span><span class="rv">Pull-out stainless, backlit</span></div>
+        <div class="row"><span class="rl">Tare</span><span class="rv">Yes</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section class="section" id="materials">
+  <div class="section-head">
+    <div class="shape shape-ring"></div>
+    <h2>Materials</h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" style="--card-accent: var(--mat)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--mat)">Casting Resin</span>
+        <div class="card-name">KISREL Epoxy Resin</div>
+        <div class="card-sub">1 gallon clear kit</div>
+        <div class="row"><span class="rl">Volume</span><span class="rv">1 gallon (2 × ½ gal)</span></div>
+        <div class="row"><span class="rl">Properties</span><span class="rv">No yellowing, no bubble</span></div>
+        <div class="row"><span class="rl">Pigments</span><span class="rv">20 colors included</span></div>
+        <div class="row"><span class="rl">Mica powders</span><span class="rv">20 colors included</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="--card-accent: var(--mat)">
+      <div class="card-body">
+        <span class="badge" style="background:var(--mat)">Mold Making</span>
+        <div class="card-name">LET'S RESIN Silicone Kit</div>
+        <div class="card-sub">1 gallon liquid silicone rubber</div>
+        <div class="row"><span class="rl">Volume</span><span class="rv">1 gallon</span></div>
+        <div class="row"><span class="rl">Mix ratio</span><span class="rv">1:1</span></div>
+        <div class="row"><span class="rl">Color</span><span class="rv">Translucent clear</span></div>
+        <div class="row"><span class="rl">Non-toxic</span><span class="rv">Yes</span></div>
+        <div class="row"><span class="rl">Use</span><span class="rv">Casting molds for resin work</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.querySelector('.theme-btn').textContent =
+    html.dataset.theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+</script>
+</body>
+</html>
